@@ -18,23 +18,26 @@ app.post('/', function (req, res) {
     const msg = req.body.text
     console.log(name, msg)
 
-    var raw = JSON.stringify({
-        "bot_id": process.env.BOT_ID,
-        "text": "Hello world2"
-    });
+    const msgArr = msg.split(" ")
 
-    var requestOptions = {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: raw,
-        redirect: 'follow'
-    };
-
-    fetch("https://api.groupme.com/v3/bots/post", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-
+    if (msgArr[0] === "chorebot") {
+        const text = msgArr[1]
+        
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                "bot_id": process.env.BOT_ID,
+                "text": text
+            }),
+            redirect: 'follow'
+        };
+    
+        fetch("https://api.groupme.com/v3/bots/post", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
 
     res.send("success")
 })
