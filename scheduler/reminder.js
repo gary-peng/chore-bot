@@ -1,29 +1,36 @@
 import fetch from "node-fetch";
-import { dummy } from "./dummy.js"
 import dotenv from "dotenv";
+import mongoose from "mongoose";
+import { todo } from "../services/commandService.js";
 
 dotenv.config();
 
-var text = "Reminder to do your chores:\n"
-dummy.chores.forEach(el => {
-    if (!el.status) {
-        text += el.name + ": " + el.assigned + "\n"
-    }
-});
+const dbURI = process.env.MONGO_URL;
+mongoose
+    .connect(dbURI)
+    .then((result) => console.log('Connected to db'))
+    .catch((err) => console.log(err));
 
-const requestOptions = {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-        "bot_id": process.env.BOT_ID,
-        "text": text
-    }),
-    redirect: 'follow'
-};
 
-fetch("https://api.groupme.com/v3/bots/post", requestOptions)
-.then(response => response.text())
-.then(result => console.log(result))
-.catch(error => console.log('error', error));
+const remind = async () => {
+    const text = await todo();
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            "bot_id": process.env.BOT_ID,
+            "text": text
+        }),
+        redirect: 'follow'
+    };
+
+    fetch("https://api.groupme.com/v3/bots/post", requestOptions)
+    .catch(error => console.log('error', error));
+
+    mongoose.disconnect();
+}
+
+remind();
 
 

@@ -29,7 +29,7 @@ export const todo = async () => {
         return "Error!"
     }
 
-    var text = "Todo List:\n"
+    var text = "Reminder to do your chores:\n"
     doc.forEach(el => {
         if (!el.completed) {
             text += el.name + ": " + el.assigned + "\n"
