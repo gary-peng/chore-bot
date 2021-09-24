@@ -1,31 +1,37 @@
 import fetch from "node-fetch";
-import { create } from "../services/commandService.js";
+import { complete, create, todo } from "../services/commandService.js";
 
 
 export const get = (req, res) => {
-    res.send('hello world')
+    res.send('hello world');
 }
 
 export const post = async (req, res) => {
-    const name = req.body.name
-    const msg = req.body.text
-    console.log(name, msg)
+    const name = req.body.name;
+    const msg = req.body.text;
+    // console.log(name, msg);
 
-    const msgArr = msg.split(" ")
+    const msgArr = msg.split(" ");
 
     if (msgArr[0] !== "chorebot") {
-        res.send("other msg")
-        return
+        res.send("other msg");
+        return;
     }
 
-    const command = msgArr[1]
-    var text = "unknown command"
+    const command = msgArr[1];
+    var text = "unknown command";
     switch (command) {
         case "echo":
-            text = msgArr[2]
+            text = msgArr[2];
         break;
         case "create":
-            text = await create()
+            text = await create(msgArr);
+        break;
+        case "todo":
+            text = await todo();
+        break;
+        case "complete":
+            text = await complete(msgArr[2]);
         break;
     }
         
@@ -40,9 +46,9 @@ export const post = async (req, res) => {
     };
 
     fetch("https://api.groupme.com/v3/bots/post", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
+    // .then(response => response.text())
+    // .then(result => console.log(result))
     .catch(error => console.log('error', error));
 
-    res.send("success")
+    res.send("success");
 }
