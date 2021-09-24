@@ -1,10 +1,12 @@
 import fetch from "node-fetch";
+import { create } from "../services/commandService.js";
+
 
 export const get = (req, res) => {
     res.send('hello world')
 }
 
-export const post = (req, res) => {
+export const post = async (req, res) => {
     const name = req.body.name
     const msg = req.body.text
     console.log(name, msg)
@@ -21,6 +23,9 @@ export const post = (req, res) => {
     switch (command) {
         case "echo":
             text = msgArr[2]
+        break;
+        case "create":
+            text = await create()
         break;
     }
         
