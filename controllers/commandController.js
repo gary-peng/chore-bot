@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { complete, create, status, todo, list } from "../services/commandService.js";
+import { complete, create, status, todo, list, remove } from "../services/commandService.js";
 
 
 export const get = (req, res) => {
@@ -26,6 +26,9 @@ export const post = async (req, res) => {
         break;
         case "create":
             text = await create(msgArr);
+        break;
+        case "remove":
+            text = await remove(msgArr[2]);
         break;
         case "status":
             text = await status();

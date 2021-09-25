@@ -19,6 +19,19 @@ export const create = async (msgArr) => {
     return "Chore created"
 }
 
+export const remove = async (name) => {
+    let doc;
+    
+    try {
+        doc = await Chore.deleteOne({ "name": name });
+    } catch (err) {
+        console.log(err)
+        return "Error!"
+    }
+    
+    return "Chore removed"
+}
+
 export const status = async () => {
     let doc;
 
@@ -49,7 +62,7 @@ export const list = async () => {
 
     var text = "All chores:\n"
     doc.forEach(el => {
-        text += el.name + ": @" + el.assigned + "\n"
+        text += el.name + ": " + el.assigned + "\n"
     });
     
     return text
