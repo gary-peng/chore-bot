@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Chore } from "../models/chore.js";
 import { Roomatelist } from "../models/roomatelist.js";
 
@@ -24,7 +23,7 @@ export const status = async () => {
     let doc;
 
     try {
-        doc = await Chore.find()
+        doc = await Chore.find({ "completed": false })
     } catch (err) {
         console.log(err)
         return "Error!"
@@ -32,9 +31,25 @@ export const status = async () => {
 
     var text = "Reminder to do your chores:\n"
     doc.forEach(el => {
-        if (!el.completed) {
-            text += el.name + ": @" + el.assigned + "\n"
-        }
+        text += el.name + ": @" + el.assigned + "\n"
+    });
+    
+    return text
+}
+
+export const list = async () => {
+    let doc;
+
+    try {
+        doc = await Chore.find()
+    } catch (err) {
+        console.log(err)
+        return "Error!"
+    }
+
+    var text = "All chores:\n"
+    doc.forEach(el => {
+        text += el.name + ": @" + el.assigned + "\n"
     });
     
     return text
@@ -72,7 +87,6 @@ export const todo = async (name) => {
         chore.completed = false;
 
         let i = roomateArr.findIndex(el => el === chore.assigned);
-        console.log(i)
         if (i < roomateArr.length - 1) {
             chore.assigned = roomateArr[i + 1];
         } else {

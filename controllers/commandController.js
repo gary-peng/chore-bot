@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { complete, create, status, todo } from "../services/commandService.js";
+import { complete, create, status, todo, list } from "../services/commandService.js";
 
 
 export const get = (req, res) => {
@@ -11,7 +11,7 @@ export const post = async (req, res) => {
     const msg = req.body.text;
     // console.log(name, msg);
 
-    const msgArr = msg.split(" ");
+    const msgArr = msg.toLowerCase().split(" ");
 
     if (msgArr[0] !== "chorebot") {
         res.send("other msg");
@@ -29,6 +29,9 @@ export const post = async (req, res) => {
         break;
         case "status":
             text = await status();
+        break;
+        case "list":
+            text = await list();
         break;
         case "complete":
             text = await complete(msgArr[2]);
