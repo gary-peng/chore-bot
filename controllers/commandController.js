@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { complete, create, todo } from "../services/commandService.js";
+import { complete, create, status, todo } from "../services/commandService.js";
 
 
 export const get = (req, res) => {
@@ -19,7 +19,7 @@ export const post = async (req, res) => {
     }
 
     const command = msgArr[1];
-    var text = "unknown command";
+    var text = "Unknown command";
     switch (command) {
         case "echo":
             text = msgArr[2];
@@ -27,11 +27,14 @@ export const post = async (req, res) => {
         case "create":
             text = await create(msgArr);
         break;
-        case "todo":
-            text = await todo();
+        case "status":
+            text = await status();
         break;
         case "complete":
             text = await complete(msgArr[2]);
+        break;
+        case "todo":
+            text = await todo(msgArr[2])
         break;
     }
         

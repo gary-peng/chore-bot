@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import { Chore } from "../models/chore.js";
+import { Roomatelist } from "../models/roomatelist.js";
 
 export const create = async (msgArr) => {
     const chore = new Chore({
         name: msgArr[2],
         assigned: msgArr[3],
-        frequency: msgArr[4],
+        day: msgArr[4],
         completed: false
     });
 
@@ -19,7 +20,7 @@ export const create = async (msgArr) => {
     return "Chore created"
 }
 
-export const todo = async () => {
+export const status = async () => {
     let doc;
 
     try {
@@ -32,7 +33,7 @@ export const todo = async () => {
     var text = "Reminder to do your chores:\n"
     doc.forEach(el => {
         if (!el.completed) {
-            text += el.name + ": " + el.assigned + "\n"
+            text += el.name + ": @" + el.assigned + "\n"
         }
     });
     
@@ -53,3 +54,37 @@ export const complete = async (name) => {
 
     return "Thanks for doing your chore"
 }
+
+export const todo = async (name) => {
+    let roomateArr;
+    try {
+        const roomatelist = await Roomatelist.findOne();
+        roomateArr = roomatelist.names;
+    } catch (err) {
+        console.log(err);
+        return "Error!";
+    }
+
+    let chore;
+    try {
+        chore = await Chore.findOne({ "name": name });
+        
+        chore.completed = false;
+
+        let i = roomateArr.findIndex(el => el === chore.assigned);
+        console.log(i)
+        if (i < roomateArr.length - 1) {
+            chore.assigned = roomateArr[i + 1];
+        } else {
+            chore.assigned = roomateArr[0];
+        }
+
+        await chore.save();
+    } catch (err) {
+        console.log(err);
+        return "Error!";
+    }
+
+    return name + " has been assigned to " + chore.assigned
+}
+

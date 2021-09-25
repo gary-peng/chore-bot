@@ -14,7 +14,7 @@ const choreSchema = new Schema({
         type: Boolean,
         required: true
     },
-    frequency: {
+    day: {
         type: String,
         required: true
     }

@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { todo } from "../services/commandService.js";
+import { status } from "../services/commandService.js";
 
 dotenv.config();
 
@@ -13,20 +13,22 @@ mongoose
 
 
 const remind = async () => {
-    const text = await todo();
+    const text = await status();
 
-    const requestOptions = {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            "bot_id": process.env.BOT_ID,
-            "text": text
-        }),
-        redirect: 'follow'
-    };
-
-    fetch("https://api.groupme.com/v3/bots/post", requestOptions)
-    .catch(error => console.log('error', error));
+    if (text !== "Reminder to do your chores:\n") {
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                "bot_id": process.env.BOT_ID,
+                "text": text
+            }),
+            redirect: 'follow'
+        };
+    
+        fetch("https://api.groupme.com/v3/bots/post", requestOptions)
+        .catch(error => console.log('error', error));
+    }
 
     mongoose.disconnect();
 }
