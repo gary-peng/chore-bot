@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { complete, create, status, todo, list, remove } from "../services/commandService.js";
+import { complete, create, status, todo, list, remove, roast } from "../services/commandService.js";
 
 
 export const get = (req, res) => {
@@ -41,6 +41,9 @@ export const post = async (req, res) => {
         break;
         case "todo":
             text = await todo(msgArr[2])
+        break;
+        case "roast":
+            text = await roast(msgArr[2])
         break;
     }
         

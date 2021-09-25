@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 import { Chore } from "../models/chore.js";
 import { Roomatelist } from "../models/roomatelist.js";
 
@@ -21,7 +22,7 @@ export const create = async (msgArr) => {
 
 export const remove = async (name) => {
     let doc;
-    
+
     try {
         doc = await Chore.deleteOne({ "name": name });
     } catch (err) {
@@ -113,5 +114,11 @@ export const todo = async (name) => {
     }
 
     return name + " has been assigned to " + chore.assigned
+}
+
+export const roast = async (name) => {
+    const res = await fetch(process.env.ROAST_URL);
+    const line = await res.text();
+    return name + ",\n" + line
 }
 
